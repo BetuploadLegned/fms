@@ -1,1 +1,2279 @@
+class Room{
 
+  constructor(){
+    this.index = "";
+    this.name = "";
+  }
+
+  setIndex(index){
+    this.index = index;
+  }
+  getIndex(){
+    return this.index;
+  }
+
+  setName(name){
+    this.name = name;
+  }
+  getName(){
+    return this.name;
+  }
+
+}//End class room 
+
+class Rank{
+
+  constructor(){
+    this.no = "";
+    this.name = "";
+    this.date_time = "";
+  }
+
+  setNo(value){
+    this.no = value;
+  }
+  getNo(){
+    return this.no;
+  }
+
+  setName(value){
+    this.name = value;
+  }
+  getName(){
+    return this.name;
+  }
+  setDateTime(value){
+      this.date_time = value;
+  }
+  getDateTime(){
+      return this.name;
+  }
+
+}//End class room 
+
+/******************************************************/
+//HMTL PROGRAM CONTROLLER 
+/******************************************************/
+
+var isShowProgramControl = true;
+var imageOffset = 0;
+imageOffset = (window.innerWidth);
+imageOffset = (85 * imageOffset) / 100;
+var origin = 0;
+
+
+var play = false;
+var class_play = "button-play";
+
+var background_color_panel_element_control_frame = "#302244";
+var color_panel_element_control_frame_inside = "#000000";
+var color_panel_element_control_frame_inside_content = "#000000";
+
+
+
+//original
+var rainbow = "background-color: " + background_color_panel_element_control_frame + "; border: 10px solid transparent; border-image: repeating-linear-gradient(to bottom right, #c4e17f 0px, #c4e17f 12.5%,#f7fdca 12.5%, #f7fdca 25%,#fad071 25%, #fad071 37.5%,#f0766b 37.5%, #f0766b 50%,#db9dbe 50%, #db9dbe 62.5%,#c49cdf 62.5%, #c49cdf 75%,#6599e2 75%, #6599e2 87.5%,#61c2e4 87.5%, #61c2e4 100%); border-image-slice: 1; background-repeat:no-repeat;)";
+
+var table_control;
+var table_main_program_control;
+
+var frame_in_content_cmd_current;
+var frame_in_content_cmd_edit;
+var frame_in_content_cmd_round;
+var frame_in_content_cmd_rank;
+
+var str_table_main = "table-main";
+var str_table_menu = "table-menu";
+var str_table_content = "table-content";
+
+var text_realtime = "text-realtime";
+
+var panel_element_control_content;
+
+
+function MovementHide() {
+
+ var element = document.getElementById("table-program-control")
+ 
+ if(origin == 0){
+   var new_origin = document.getElementById("table-program-control").style.left = "0" + "px";
+   console.log("new origin " + new_origin);
+ }
+
+//var rect = element.getBoundingClientRect();
+//console.log(rect.top, rect.right, rect.bottom, rect.left);
+
+console.log("ccc " + isShowProgramControl);
+
+if(isShowProgramControl){
+  //Hide
+  isShowProgramControl = false;
+  var new_position = document.getElementById("table-program-control").style.left = imageOffset + "px";
+  console.log("new position " + new_position);
+}else{
+  //Show
+  isShowProgramControl = true;
+  var new_position = document.getElementById("table-program-control").style.left = origin + "px";
+  console.log("new position " + new_position);
+}
+
+console.log("fff " + isShowProgramControl);
+
+
+
+}
+
+function ShowHide() {
+var element_for_action = table_main_program_control;
+if (element_for_action.style.display === "none") {
+  element_for_action.style.display = "table";
+} else {
+  element_for_action.style.display = "none";
+}
+}
+
+function Hide(element){
+element.style.display = "none";
+}
+
+function Show(element){
+element.style.display = "table";
+//element.width = "100%";
+//table-layout:fixed; width:90px;
+}
+
+
+function ShowContentCmdEdit(){
+//var a = document.getElementsByClassName('table-content-frame')[0].offsetWidth;
+Show(frame_in_content_cmd_edit);
+Hide(frame_in_content_cmd_current);
+Hide(frame_in_content_cmd_round);
+Hide(frame_in_content_cmd_rank);
+
+}
+
+function ShowContentCmdStatus(){
+Show(frame_in_content_cmd_current);
+Hide(frame_in_content_cmd_edit);
+Hide(frame_in_content_cmd_round);
+Hide(frame_in_content_cmd_rank);
+}
+
+function ShowContentRoundStatus(){
+Show(frame_in_content_cmd_round);
+Hide(frame_in_content_cmd_current);
+Hide(frame_in_content_cmd_edit);
+Hide(frame_in_content_cmd_rank);
+}
+
+function ShowContentRanking(){
+Show(frame_in_content_cmd_rank);
+Hide(frame_in_content_cmd_round);
+Hide(frame_in_content_cmd_current);
+Hide(frame_in_content_cmd_edit);
+
+}
+
+function SwitchPlay(){
+
+  console.log("สลับโหมดการเล่นโปรแกรม ปัจจุบัน: " + play);
+
+  if(play){
+    play = false;
+    UpdateControlPlay();
+  }else{
+    play = true;
+    UpdateControlPlay();
+  }
+
+  
+}
+
+function SetPlay(bool){
+  play = bool;
+  UpdateControlPlay();
+}
+
+
+
+function UpdateControlPlay(){
+
+  var isBool = document.getElementsByClassName(class_play).length;
+  isBool = (isBool > 0);
+
+  if(isBool){
+    var element_play_button = document.getElementsByClassName(class_play)[0];
+
+    if(play){
+      element_play_button.textContent = "การเล่น (เปิด)";
+    }else{
+      
+      element_play_button.textContent = "การเล่น (หยุด)";
+    }
+
+  }
+
+}
+
+
+function MakeFrameContent(element_content){
+
+var table_in_content = document.createElement("table");
+table_in_content.setAttribute("style", "position:absolute;");
+table_in_content.className = "table-content-frame";
+table_in_content.width = "100%";
+element_content.append(table_in_content); 
+
+var table_tr_in_content = document.createElement("tr");
+table_tr_in_content.className = "tr-content";
+table_in_content.append(table_tr_in_content);
+
+var table_th_in_content = document.createElement("th");
+table_th_in_content.className = "th-content";
+table_th_in_content.width = "100%";
+table_tr_in_content.append(table_th_in_content); 
+
+
+/******************************** */
+
+var frame = document.createElement("div");
+frame.className="frame";
+frame.setAttribute("style", "font-size:18px; height:500px; width:100%; " + rainbow);
+table_th_in_content.append(frame); 
+
+
+var frame_in = document.createElement("div");
+frame_in.className="frame-in";
+frame_in.setAttribute("style", "font-size:18px; position:relative; top:4%; left:3%; height:92%; width:94%; background-color: " + color_panel_element_control_frame_inside + ";");
+frame.append(frame_in); 
+
+
+var frame_in_content = document.createElement("div");
+frame_in_content.className="frame-in-content";
+frame_in_content.setAttribute("style", "font-size:18px; position:relative; top:4%; left:3%; height:92%; width:94%; background-color: " + color_panel_element_control_frame_inside_content + ";");
+frame_in.append(frame_in_content); 
+
+return table_in_content;
+
+}
+
+
+function MakeTableOrigin(distance_of_top){
+
+/****************************/
+
+var table_main = document.createElement("table");
+table_main.className = str_table_main;
+table_main.width = "100%";
+table_main.setAttribute("style", "color: white; font-size:100%; font-weight: bold; position:absolute; top:" + distance_of_top + "; width: 100%; backgroud-color: red");
+document.body.appendChild(table_main); 
+
+var tr_table = document.createElement("tr");
+table_main.append(tr_table); 
+
+var th_blank_a = document.createElement("th");
+th_blank_a.width = "5%";
+th_blank_a.textContent = "";
+tr_table.append(th_blank_a); 
+
+var th_menu = document.createElement("th");
+th_menu.width = "20%";
+th_menu.className = str_table_menu;
+th_menu.setAttribute("style", "vertical-align:top");
+th_menu.textContent = "";
+tr_table.append(th_menu); 
+
+var th_blank_b = document.createElement("th");
+th_blank_b.width = "5%";
+th_blank_b.textContent = "";
+tr_table.append(th_blank_b); 
+
+var th_content = document.createElement("th");
+th_content.width = "65%";
+th_content.className = str_table_content;
+th_content.setAttribute("style", "position:absolute;");
+
+th_content.textContent = "";
+tr_table.append(th_content); 
+
+var th_blank_c = document.createElement("th");
+th_blank_c.width = "5%";
+th_blank_c.textContent = "";
+tr_table.append(th_blank_c); 
+
+/****************************/
+
+return table_main;
+
+}
+
+function MakeFrame(table){
+
+
+var table_main = table;
+var th_menu = table_main.getElementsByClassName(str_table_menu)[0];
+var th_content = table_main.getElementsByClassName(str_table_content)[0];
+
+/****************************/
+
+var table = document.createElement("table");
+table.width = "100%";
+th_menu.append(table); 
+
+var tr = document.createElement("tr");
+table.append(tr);
+
+var th_menu_inside = document.createElement("th");
+th_menu_inside.width = "100%";
+tr.append(th_menu_inside); 
+
+/****************************/
+
+var background_color_panel_element_control_frame = "#302244";
+var color_panel_element_control_frame_inside = "#073763";
+var color_panel_element_control_frame_inside_content = "#073763";
+
+var rainbow = "background-color: " + background_color_panel_element_control_frame + "; border: 10px solid transparent; border-image: repeating-linear-gradient(to bottom right, #c4e17f 0px, #c4e17f 12.5%,#f7fdca 12.5%, #f7fdca 25%,#fad071 25%, #fad071 37.5%,#f0766b 37.5%, #f0766b 50%,#db9dbe 50%, #db9dbe 62.5%,#c49cdf 62.5%, #c49cdf 75%,#6599e2 75%, #6599e2 87.5%,#61c2e4 87.5%, #61c2e4 100%); border-image-slice: 1; background-repeat:no-repeat;)";
+
+
+var div = document.createElement("div");
+div.setAttribute("style", "padding-bottom: 10px;");
+th_menu_inside.append(div);
+
+var menu_cmd = document.createElement("button");
+menu_cmd.type="button";
+menu_cmd.textContent="คำสั่ง";
+menu_cmd.onclick=ShowContentCmdStatus;
+menu_cmd.setAttribute("style", "color: white; font-size:150%; font-weight: bold;  height: 70px; width: 100%; " + rainbow + "padding-bottom: 25px;");
+div.append(menu_cmd);
+
+/********* */
+
+var div = document.createElement("div");
+div.setAttribute("style", "padding-bottom: 10px;");
+th_menu_inside.append(div);
+
+var menu_cmd_edit = document.createElement("button");
+menu_cmd_edit.type="button";
+menu_cmd_edit.textContent="แก้ไขคำสั่ง";
+menu_cmd_edit.onclick=ShowContentCmdEdit;
+menu_cmd_edit.setAttribute("style", "color: white; font-size:150%; font-weight: bold; height: 70px; width: 100%; " + rainbow);
+div.append(menu_cmd_edit);
+
+/********* */
+
+var div = document.createElement("div");
+div.setAttribute("style", "padding-bottom: 10px;");
+th_menu_inside.append(div);
+
+var menu_program_status = document.createElement("button");
+menu_program_status.type="button";
+menu_program_status.textContent="สถานะการทำงาน";
+menu_program_status.onclick=ShowContentRoundStatus;
+menu_program_status.setAttribute("style", "color: white; font-size:150%; font-weight: bold; height: 70px; width: 100%;" + rainbow);
+div.append(menu_program_status);
+
+/********* */
+
+var div = document.createElement("div");
+div.setAttribute("style", "padding-bottom: 10px;");
+th_menu_inside.append(div);
+
+var menu_program_rank = document.createElement("button");
+menu_program_rank.type="button";
+menu_program_rank.textContent="อันดับ";
+menu_program_rank.onclick=ShowContentRanking;
+menu_program_rank.setAttribute("style", "color: white; font-size:150%; font-weight: bold; height: 70px; width: 100%;" + rainbow);
+div.append(menu_program_rank);
+
+/********* */
+
+var div = document.createElement("div");
+div.setAttribute("style", "padding-bottom: 10px;");
+th_menu_inside.append(div);
+
+var menu_program_rank = document.createElement("button");
+menu_program_rank.className = class_play;
+menu_program_rank.type="button";
+menu_program_rank.textContent="การเล่น";
+menu_program_rank.onclick=SwitchPlay;
+menu_program_rank.setAttribute("style", "color: white; font-size:150%; font-weight: bold; height: 70px; width: 100%;" + rainbow);
+div.append(menu_program_rank);
+
+
+/*******/
+
+frame_in_content_cmd_current = MakeFrameContent(th_content);
+frame_in_content_cmd_edit = MakeFrameContent(th_content);
+frame_in_content_cmd_round = MakeFrameContent(th_content);
+frame_in_content_cmd_rank = MakeFrameContent(th_content);
+
+
+}
+
+/****************************/
+
+var web_element = document.getElementsByClassName("relative flex items-center gap-x-[2px] xxs:gap-x-[5px] md:gap-x-[10px] lg:order-3")[0];
+
+var div = document.createElement("div");
+div.className = "show-hide flex-grow lg:order-1 p-2";
+//div.setAttribute("style", "width: 100px");
+web_element.prepend(div);
+
+var menu_cmd = document.createElement("button");
+menu_cmd.type="button";
+menu_cmd.className ="p-2";
+menu_cmd.textContent = "แสดง/ซ่อน";
+menu_cmd.onclick=ShowHide;
+menu_cmd.setAttribute("style", "color: white; font-size:150%; font-weight: bold;  height: 70px; width: 100%;" + rainbow);
+div.append(menu_cmd);
+
+
+
+var elemeny_main = document.getElementsByClassName("sticky top-0 z-50")[0];
+
+var element_program_dialog = document.createElement("div");
+element_program_dialog.setAttribute("style", "text-align: center; font-size: 30px;" + rainbow);
+elemeny_main.prepend(element_program_dialog);
+
+var element_text = document.createElement("a");
+element_text.className = text_realtime;
+element_text.textContent = "สถานะของโปรแกรม";
+element_program_dialog.prepend(element_text);
+
+/****************************/
+
+var table_alert = MakeTableOrigin("10%");
+table_main_program_control = MakeTableOrigin("10%");
+MakeFrame(table_main_program_control);
+
+var panel_element_control = frame_in_content_cmd_current;
+
+
+/****************************************/
+
+
+var font_size_title_percent = "10%";
+
+//font size title
+var font_size_title = 35;
+//font size 
+var font_size = 25;
+
+//Red
+var txt_cmd_color = "#DC143C";
+//Yellow
+var bg_txt_cmd = "#f1c232";
+
+//White
+var font_text_topic = "#ffffff";
+//Gray
+var bg_text_topic = "#444444";
+
+var whiteSpace = "\u00a0\u00a0\u00a0";
+
+
+
+/**************************************************************/
+
+var table_content_program_edit;
+var table_content_program_status;
+
+var global_my_room = new Room();
+
+
+
+
+
+var class_program_respones_status_value = "class_program_respones_status_value";
+var class_program_respones_credit_value = "title_program_respones_credit_value";
+var class_program_respones_time_shoot_value = "title_program_respones_time_shoot_value";
+var class_program_respones_round_value = "program_respones_round_number_value";
+var class_program_respones_round_exp_value = "title_program_respones_round_exp_value";
+var class_program_respones_transaction_value = "program_respones_transaction_value";
+var class_program_respones_transaction_exp_value = "title_program_respones_transaction_exp_value";
+var class_program_respones_ranking_value = "title_program_respones_ranking_value";
+
+var class_cmd_room_id_value = "cmd-room-id-value";
+var class_cmd_room_content_value = "cmd-room-content-value";
+
+var class_cmd_value = "cmd-time-shoot-milliseconds";
+var class_cmd_friend_username = "title_program_respones_username_friend";
+
+var class_cmd_edit_ms = "input-ms";
+var class_cmd_edit_friend_username = "input_form_friend_username";
+
+function UpdateTextRealTime(str){
+  var text_realtime_value = document.getElementsByClassName(text_realtime)[0];
+  text_realtime_value.text = str;
+}
+
+
+function GetCmdMilliseconds(){
+  var value = document.getElementsByClassName(class_cmd_value)[0].innerText;
+  value = StrToNumberOnly(value);
+  return value; 
+}
+
+
+function UpdateControlRoundRanking(str){
+str = whiteSpace + str + whiteSpace;
+document.getElementsByClassName(class_program_respones_ranking_value)[0].innerText = str;
+}
+
+function UpdateControlRunStatus(str){
+str = whiteSpace + str + whiteSpace;
+document.getElementsByClassName(class_program_respones_status_value)[0].innerText = str;
+}
+
+function UpdateControlRunStatus(str){
+str = whiteSpace + str + whiteSpace;
+document.getElementsByClassName(class_program_respones_status_value)[0].innerText = str;
+}
+function UpdateControlCredit(str){
+str = whiteSpace + str + whiteSpace;
+document.getElementsByClassName(class_program_respones_credit_value)[0].innerText = str;
+}
+function UpdateControlTimeShoot(str){
+str = whiteSpace + str + whiteSpace;
+document.getElementsByClassName(class_program_respones_time_shoot_value)[0].innerText = str;
+}
+function UpdateControlRoundTitle(str){
+str = whiteSpace + str + whiteSpace;
+document.getElementsByClassName(class_program_respones_round_value)[0].innerText = str;
+}
+function UpdateControlRoundDateTimeExp(str){
+str = whiteSpace + str + whiteSpace;
+document.getElementsByClassName(class_program_respones_round_exp_value)[0].innerText = str;
+}
+function UpdateControlTransactionTitle(str){
+str = whiteSpace + str + whiteSpace;
+document.getElementsByClassName(class_program_respones_transaction_value)[0].innerText = str;
+}
+function UpdateControlTransactionDateTimeExp(str){
+str = whiteSpace + str + whiteSpace;
+document.getElementsByClassName(class_program_respones_transaction_exp_value)[0].innerText = str;
+}
+
+/**************************************************************/
+
+
+
+var room_normal_88 = new Room();
+room_normal_88.setIndex("A");
+room_normal_88.setName("88 Normal");
+
+var room_vip_88 = new Room();
+room_vip_88.setIndex("B");
+room_vip_88.setName("88 Vip");
+
+var room_normal_264 = new Room();
+room_normal_264.setIndex("C");
+room_normal_264.setName("264 Normal");
+
+var room_vip_264 = new Room();
+room_vip_264.setIndex("D");
+room_vip_264.setName("264 Vip");
+
+
+/**************************************************************/
+function GetDateTimeRoundExpWithMyPc(time_minutes_per_round, time_seconds_special){
+  
+  var time_special_minutes = (time_seconds_special / 60);
+  var result = (time_minutes_per_round - time_special_minutes);
+  var time_minutes_distance_next_round = (result - 1);
+
+  console.log("เช็ครอบก่อนหน้ายังไม่หมดเวลา A: " + time_minutes_distance_next_round);
+
+  var str_time =  GetTimeCountDownInSideRound();
+  var number_time = StrToNumberOnly(str_time);
+  var hh = number_time[0] + number_time[1];
+  var mn = number_time[2] + number_time[3];
+  var sc = number_time[4] + number_time[5];
+
+  console.log("เช็ครอบก่อนหน้ายังไม่หมดเวลา B: " + str_time);
+  console.log("เช็ครอบก่อนหน้ายังไม่หมดเวลา C: " + str_time);
+
+  hh = parseInt(hh);
+  mn = parseInt(mn);
+  sc = parseInt(sc);
+
+  console.log("เช็ครอบก่อนหน้ายังไม่หมดเวลา D: " + hh + ":" + mn + ":" + sc);
+
+  var thisPageIsNextRound = false;
+
+  if(hh < 0){
+    //mn< = this page is play
+    //mn> = this page is next play round
+    //mn= = is check seconds
+    if(mn > time_minutes_distance_next_round){
+      console.log("เช็ครอบก่อนหน้ายังไม่หมดเวลา E");
+      thisPageIsNextRound = true;
+    }else if(mn == time_minutes_distance_next_round){
+      console.log("เช็ครอบก่อนหน้ายังไม่หมดเวลา F");
+      if(sc > 0){
+        thisPageIsNextRound = true;
+        console.log("เช็ครอบก่อนหน้ายังไม่หมดเวลา G");
+
+      }
+    }
+
+    console.log("เช็ครอบก่อนหน้ายังไม่หมดเวลา H: " + thisPageIsNextRound);
+
+  }
+
+  return thisPageIsNextRound;
+
+
+}
+
+function GetTimeCountDownInSideRound(){
+  var str = document.getElementsByClassName("countdown-timer-component")[0].innerText;
+  return str;
+}
+
+function GetRoomDateTimeWithMyPc(){
+
+  var date_time_round_exp = new Date();
+  var room_index = global_my_room.getIndex();
+
+  if(room_index == room_normal_264.getIndex()){
+    date_time_round_exp = RoundTimeFromPc(5, 0);
+  }else   if(room_index == room_vip_264.getIndex()){
+    date_time_round_exp = RoundTimeFromPc(5, 0);
+  }else   if(room_index == room_normal_88.getIndex()){
+    date_time_round_exp = RoundTimeFromPc(15, 60);
+  }else   if(room_index == room_vip_88.getIndex()){
+    date_time_round_exp = RoundTimeFromPc(15, 60);
+  }
+
+  return date_time_round_exp;
+
+}
+
+function RoundTimeFromPc(time_minutes_per_round, time_seconds_special){
+
+  var date_time_now = new Date();
+  date_time_now.setSeconds(0);
+  date_time_now.setMilliseconds(0);
+  var date_time_now_mn = date_time_now.getMinutes();
+
+  var distance = (date_time_now_mn / time_minutes_per_round);
+  var distance_floor = Math.floor(distance);
+
+  console.log("คำนวนเวลายิงจากเครื่อง A: " + distance);
+  console.log("คำนวนเวลายิงจากเครื่อง B: " + distance_floor);
+
+
+  if(distance_floor < distance){
+    var sec = (distance_floor * time_minutes_per_round) + time_minutes_per_round;
+    date_time_now.setMinutes(sec);
+    console.log("คำนวนเวลายิงจากเครื่อง C: " + sec);
+    console.log("คำนวนเวลายิงจากเครื่อง D: " + DateToStrHuman(date_time_now));
+  }else if(distance_floor == distance){
+    console.log("คำนวนเวลายิงจากเครื่อง E: " + DateToStrHuman(date_time_now));
+  }
+
+  date_time_now.setMilliseconds(0);
+  date_time_now.setSeconds(date_time_now.getSeconds() + time_seconds_special);
+  date_time_now.setSeconds(59);
+  console.log("คำนวนเวลายิงจากเครื่อง F: " + DateToStrHuman(date_time_now));
+
+
+  if(GetDateTimeRoundExpWithMyPc(time_minutes_per_round, time_seconds_special)){
+    date_time_now.setMinutes(date_time_now.getMinutes() + time_minutes_per_round);
+    console.log("คำนวนเวลายิงจากเครื่อง G: " + DateToStrHuman(date_time_now));
+  }
+
+
+
+  console.log("คำนวนเวลายิงจากเครื่อง" + time_minutes_per_round + " นาที: " + DateToStrHuman(date_time_now));
+
+  return date_time_now;
+
+}
+
+function UpdateCMDMilliseconds()
+{ 
+var new_ms = document.getElementById(class_cmd_edit_ms).value;
+document.getElementsByClassName(class_cmd_value)[0].innerText = whiteSpace + new_ms + whiteSpace;
+}
+
+function UpdateCMDRoomToNormal88(){
+
+var classRoom = new Room();
+classRoom = room_normal_88;
+var room_index = classRoom.getIndex();
+var room_name = classRoom.getName();
+
+global_my_room = room_normal_88;
+
+document.getElementsByClassName(class_cmd_room_id_value)[0].innerText = whiteSpace + room_index + whiteSpace;
+document.getElementsByClassName(class_cmd_room_content_value)[0].innerText = whiteSpace + room_name + whiteSpace;
+
+}
+
+function UpdateCMDRoomToVip88(){
+
+var classRoom = new Room();
+classRoom = room_vip_88;
+var room_index = classRoom.getIndex();
+var room_name = classRoom.getName();
+
+global_my_room = room_vip_88;
+
+document.getElementsByClassName(class_cmd_room_id_value)[0].innerText = whiteSpace + room_index + whiteSpace;
+document.getElementsByClassName(class_cmd_room_content_value)[0].innerText = whiteSpace + room_name + whiteSpace;
+
+}
+
+function UpdateCMDRoomToNormal264(){
+
+var classRoom = new Room();
+classRoom = room_normal_264;
+var room_index = classRoom.getIndex();
+var room_name = classRoom.getName();
+
+global_my_room = room_normal_264;
+
+document.getElementsByClassName(class_cmd_room_id_value)[0].innerText = whiteSpace + room_index + whiteSpace;
+document.getElementsByClassName(class_cmd_room_content_value)[0].innerText = whiteSpace + room_name + whiteSpace;
+
+}
+
+function UpdateCMDRoomToVip264(){
+
+var classRoom = new Room();
+classRoom = room_vip_264;
+var room_index = classRoom.getIndex();
+var room_name = classRoom.getName();
+
+global_my_room = room_vip_264;
+
+document.getElementsByClassName(class_cmd_room_id_value)[0].innerText = whiteSpace + room_index + whiteSpace;
+document.getElementsByClassName(class_cmd_room_content_value)[0].innerText = whiteSpace + room_name + whiteSpace;
+
+}
+
+function UpdateCMDFriend(){
+
+var newValue = document.getElementById(class_cmd_edit_friend_username).value;
+document.getElementsByClassName(class_cmd_friend_username)[0].innerText = newValue;
+
+}
+
+
+function Newline(){
+
+var blank = document.createElement("p");
+blank.className = "blankg";
+blank.textContent = "\u00a0";
+panel_element_control.prepend(blank);
+
+}
+
+function HrLine(){
+  
+var blank = document.createElement("hr");
+blank.className = "hr-line";
+panel_element_control.prepend(blank);
+
+}
+
+function Colon(){
+var blank = document.createElement("a");
+blank.className = "blankg";
+blank.text=" : ";
+blank.setAttribute("style", "font-size:" + font_size + "px;left:40;right:40px;");
+panel_element_control.prepend(blank);
+}
+
+
+function PanelProgramSave(){  
+
+var element_child = getElementChildContent(frame_in_content_cmd_rank);
+
+var table = document.createElement("table");
+table.setAttribute("style", "position: absolute;  text-align: left;");
+table.width = "100%";
+element_child.append(table);
+
+var tr = document.createElement("tr");
+table.append(tr);
+
+var td_title = document.createElement("td");
+tr.append(td_title);
+
+var title_program_save = document.createElement("center");
+title_program_save.className = "title_program_save";;
+title_program_save.textContent="[ บันทึกอันดับ ]";
+title_program_save.setAttribute("style", "font-size100%; color:#DC143C; background-color:#ffffff;");
+td_title.prepend(title_program_save);
+
+AddBlankRow(table, 1);
+
+var tr = document.createElement("tr");
+table.append(tr);
+
+var td = document.createElement("td");
+tr.append(td);
+
+var td_div = document.createElement("div");
+td.append(td_div);
+
+var textarea = document.createElement("textarea");
+textarea.setAttribute("style", "color: #000000; width:100%; height:150%;");
+//textwrapper.setAttribute("cols", );
+textarea.readOnly = true;
+td_div.append(textarea);
+
+//<div class="textwrapper"><textarea cols="2" rows="10" id="rules"/></div>
+
+
+
+
+/** 
+var program_save_value = document.createElement("a");
+program_save_value.className = "program_save_value";
+program_save_value.text="\u00a0 ว่างเปล่า \u00a0";
+program_save_value.setAttribute("style", "font-size:" + font_size + "px;left:40;right:40px;color:#DC143C;background-color:"+ bg_txt_cmd + ";");
+panel_element_control.prepend(program_save_value);
+
+
+var title_program_save_center = document.createElement("a");
+title_program_save_center.className = "title_program_save_center";
+title_program_save_center.setAttribute("style", "font-size:" + font_size + "px;left:100;right:100px;color:#DC143C;background-color:#ffffff;");
+panel_element_control.prepend(title_program_save_center);
+**/
+
+
+
+}
+
+function PanelProgramRespones(){
+
+var element_child = getElementChildContent(frame_in_content_cmd_round);
+
+var table = document.createElement("table");
+table.setAttribute("style", "position: absolute;  text-align: left;");
+table.width = "100%";
+element_child.append(table);
+
+var tr = document.createElement("tr");
+table.append(tr);
+
+var td_title = document.createElement("td");
+td_title.setAttribute("colspan", 2);
+tr.append(td_title);
+
+
+var title_program_respones = document.createElement("center");
+title_program_respones.className = "title-program-respones";;
+title_program_respones.textContent="[ สถานะการทำงานโปรแกรม ]";
+title_program_respones.setAttribute("style", "font-size:100%; color:#DC143C; background-color:#ffffff;");
+td_title.prepend(title_program_respones);
+
+
+/********************************************/
+AddBlankRow(table, 2);
+
+var tr = document.createElement("tr");
+table.append(tr);
+
+var td_title = document.createElement("td");
+td_title.width = "50%";
+tr.append(td_title);
+
+var td_value = document.createElement("td");
+td_value.width = "50%";
+tr.append(td_value);
+
+
+var program_status = document.createElement("a");
+program_status.className = "program-status ";
+program_status.text="\u00a0 สถานะการทำงาน: \u00a0";
+program_status.setAttribute("style", "font-size:100%; color:" + font_text_topic +";background-color:" + bg_text_topic + ";");
+td_title.append(program_status);
+
+var program_status_value = document.createElement("a");
+program_status_value.className = class_program_respones_status_value;
+program_status_value.text="\u00a0 ว่างเปล่า \u00a0";
+program_status_value.setAttribute("style", "font-size:100%;left:40; color:#DC143C; background-color:"+ bg_txt_cmd + ";");
+td_value.append(program_status_value);
+
+/********************************************/
+
+var tr = document.createElement("tr");
+table.append(tr);
+
+var td_title = document.createElement("td");
+tr.append(td_title);
+
+var td_value = document.createElement("td");
+tr.append(td_value);
+
+var title_program_respones_round_number = document.createElement("a");
+title_program_respones_round_number.className = "title_program_respones_round_number";
+title_program_respones_round_number.text="\u00a0 รอบที่เล่น: \u00a0";
+title_program_respones_round_number.setAttribute("style", "font-size:100%; color:" + font_text_topic +"; background-color:" + bg_text_topic + ";");
+td_title.append(title_program_respones_round_number);
+
+var program_respones_round_number_value = document.createElement("a");
+program_respones_round_number_value.className = class_program_respones_round_value;
+program_respones_round_number_value.text="\u00a0 ว่างเปล่า \u00a0";
+program_respones_round_number_value.setAttribute("style", "font-size:100%; color:#DC143C; background-color:"+ bg_txt_cmd + ";");
+td_value.append(program_respones_round_number_value);
+
+
+/********************************************/
+
+
+var tr = document.createElement("tr");
+table.append(tr);
+
+var td_title = document.createElement("td");
+tr.append(td_title);
+
+var td_value = document.createElement("td");
+tr.append(td_value);
+
+var title_program_respones_transaction = document.createElement("a");
+title_program_respones_transaction.className = "title_program_respones_transaction";
+title_program_respones_transaction.text="\u00a0 โพยรอบที่เล่น: \u00a0";
+title_program_respones_transaction.setAttribute("style", "font-size:100%; color:" + font_text_topic +";background-color:" + bg_text_topic + ";");
+td_title.append(title_program_respones_transaction);
+
+
+var program_respones_transaction_value = document.createElement("a");
+program_respones_transaction_value.className = class_program_respones_transaction_value;
+program_respones_transaction_value.text="\u00a0 ว่างเปล่า \u00a0";
+program_respones_transaction_value.setAttribute("style", "font-size:100%; color:#DC143C;background-color:"+ bg_txt_cmd + ";");
+td_value.append(program_respones_transaction_value);
+
+
+
+  /********************************************/
+
+
+  var tr = document.createElement("tr");
+  table.append(tr);
+  
+  var td_title = document.createElement("td");
+  tr.append(td_title);
+  
+  var td_value = document.createElement("td");
+  tr.append(td_value);
+
+
+  var title_program_respones_transaction_exp = document.createElement("a");
+  title_program_respones_transaction_exp.className = "title_program_respones_transaction_exp";
+  title_program_respones_transaction_exp.text="\u00a0 หมดเวลาดึงโพย \u00a0";
+  title_program_respones_transaction_exp.setAttribute("style", "font-size:100%; color:" + font_text_topic +";background-color:" + bg_text_topic + ";");
+  td_title.append(title_program_respones_transaction_exp);
+
+
+var title_program_respones_transaction_exp_value = document.createElement("a");
+title_program_respones_transaction_exp_value.className = class_program_respones_transaction_exp_value;
+title_program_respones_transaction_exp_value.text="\u00a0 ว่างเปล่า \u00a0";
+title_program_respones_transaction_exp_value.setAttribute("style", "font-size:100%; color:#DC143C;background-color:"+ bg_txt_cmd + ";");
+td_value.append(title_program_respones_transaction_exp_value);
+
+
+
+  /********************************************/
+
+
+  var tr = document.createElement("tr");
+  table.append(tr);
+  
+  var td_title = document.createElement("td");
+  tr.append(td_title);
+  
+  var td_value = document.createElement("td");
+  tr.append(td_value);
+
+  var title_program_respones_round_exp_value = document.createElement("a");
+title_program_respones_round_exp_value.className = class_program_respones_round_exp_value;
+title_program_respones_round_exp_value.text="\u00a0 ว่างเปล่า \u00a0";
+title_program_respones_round_exp_value.setAttribute("style", "font-size:100%; color:#DC143C;background-color:"+ bg_txt_cmd + ";");
+td_value.append(title_program_respones_round_exp_value);
+
+var title_program_respones_round_exp = document.createElement("a");
+title_program_respones_round_exp.className = "title_program_respones_round_exp";
+title_program_respones_round_exp.text="\u00a0 หมดเวลารอบ: \u00a0";
+title_program_respones_round_exp.setAttribute("style", "font-size:100%; color:" + font_text_topic +";background-color:" + bg_text_topic + ";");
+td_title.append(title_program_respones_round_exp);
+
+  /********************************************/
+
+
+  var tr = document.createElement("tr");
+  table.append(tr);
+  
+  var td_title = document.createElement("td");
+  tr.append(td_title);
+  
+  var td_value = document.createElement("td");
+  tr.append(td_value);
+
+
+  var title_program_respones_time_shoot = document.createElement("a");
+  title_program_respones_time_shoot.className = "title_program_respones_time_shoot";
+  title_program_respones_time_shoot.text="\u00a0 เวลายิง \u00a0";
+  title_program_respones_time_shoot.setAttribute("style", "font-size:100%; color:" + font_text_topic +";background-color:" + bg_text_topic + ";");
+  td_title.append(title_program_respones_time_shoot);
+
+  var title_program_respones_time_shoot_value = document.createElement("a");
+  title_program_respones_time_shoot_value.className = class_program_respones_time_shoot_value;
+  title_program_respones_time_shoot_value.text="\u00a0 ว่างเปล่า \u00a0";
+  title_program_respones_time_shoot_value.setAttribute("style", "font-size:100%; color:#DC143C;background-color:"+ bg_txt_cmd + ";");
+  td_value.append(title_program_respones_time_shoot_value);
+
+
+
+      /********************************************/
+
+      var tr = document.createElement("tr");
+      table.append(tr);
+      
+      var td_title = document.createElement("td");
+      tr.append(td_title);
+      
+      var td_value = document.createElement("td");
+      tr.append(td_value);
+
+
+      var title_program_respones_credit = document.createElement("a");
+title_program_respones_credit.className = "title_program_respones_credit";
+title_program_respones_credit.text="\u00a0 เครดิต: \u00a0";
+title_program_respones_credit.setAttribute("style", "font-size:100%; color:" + font_text_topic +";background-color:" + bg_text_topic + ";");
+td_title.append(title_program_respones_credit);
+
+var title_program_respones_credit_value = document.createElement("a");
+title_program_respones_credit_value.className = class_program_respones_credit_value;
+title_program_respones_credit_value.text="\u00a0 ว่างเปล่า \u00a0";
+title_program_respones_credit_value.setAttribute("style", "font-size:100%; color:#DC143C;background-color:"+ bg_txt_cmd + ";");
+td_value.append(title_program_respones_credit_value);
+
+
+        /********************************************/
+
+        var tr = document.createElement("tr");
+        table.append(tr);
+        
+        var td_title = document.createElement("td");
+        tr.append(td_title);
+        
+        var td_value = document.createElement("td");
+        tr.append(td_value);
+
+
+        var title_program_respones_credit = document.createElement("a");
+title_program_respones_credit.className = "title_program_respones_ranking";
+title_program_respones_credit.text="\u00a0 อันดับ: \u00a0";
+title_program_respones_credit.setAttribute("style", "font-size:100%; color:" + font_text_topic +";background-color:" + bg_text_topic + ";");
+td_title.append(title_program_respones_credit);
+
+  var title_program_respones_credit_value = document.createElement("a");
+  title_program_respones_credit_value.className = class_program_respones_ranking_value;
+  title_program_respones_credit_value.text="\u00a0 ว่างเปล่า \u00a0";
+  title_program_respones_credit_value.setAttribute("style", "font-size:100%; color:#DC143C;background-color:"+ bg_txt_cmd + ";");
+  td_value.append(title_program_respones_credit_value);
+
+}
+
+function getElementChildContent(element_content){
+
+var element = element_content.getElementsByClassName("frame-in-content")[0];
+return element;
+}
+
+function PanelCommand(){
+
+var table = document.createElement("table");
+table.width = "100%";
+table.className = "table-content-program-control-command";
+table.setAttribute("style", "font-size:10px color:#DC143C; text-align: left;");
+
+var element = getElementChildContent(frame_in_content_cmd_current);
+element.append(table);
+
+table_content_program_status = table;
+
+var tr = document.createElement("tr");
+table.append(tr);
+
+var td = document.createElement("td");
+td.setAttribute("colspan", "5");
+tr.append(td);
+
+var title_program_edit_center = document.createElement("center");
+title_program_edit_center.className = "title_program_edit_center";;
+title_program_edit_center.textContent="[ คำสั่งการทำงาน ]";
+title_program_edit_center.setAttribute("style", "font-size:100%; color:#DC143C; background-color:#ffffff;");
+td.append(title_program_edit_center);
+
+
+AddBlankRow(table, 5 );
+/***************************************/
+
+var tr = document.createElement("tr");
+table.append(tr);
+
+var td_title = document.createElement("td");
+td_title.setAttribute("colspan", "2");
+tr.append(td_title);
+
+var td_a = document.createElement("td");
+tr.append(td_a);
+
+var td_b = document.createElement("td");
+tr.append(td_b);
+
+var td_c = document.createElement("td");
+tr.append(td_c);
+
+
+var title_time_shoot_ms = document.createElement("a");
+title_time_shoot_ms.className = "title_time-shoot-milliseconds";
+title_time_shoot_ms.text="\u00a0 ห้องเล่น: \u00a0";
+title_time_shoot_ms.setAttribute("style", "font-size:100%; color: " + font_text_topic + ";background-color:" + bg_text_topic + ";");
+td_title.append(title_time_shoot_ms);
+
+var title_time_shoot_ms = document.createElement("a");
+title_time_shoot_ms.className = class_cmd_room_content_value;
+title_time_shoot_ms.text="\u00a0 START A \u00a0";
+title_time_shoot_ms.setAttribute("style", "font-size:100%; color: " + txt_cmd_color +  ";background-color:" + bg_txt_cmd + ";");
+td_a.append(title_time_shoot_ms);
+
+var title_time_shoot_ms = document.createElement("a");
+title_time_shoot_ms.className = class_cmd_room_id_value;
+title_time_shoot_ms.text = "\u00a0 START B \u00a0";
+title_time_shoot_ms.setAttribute("style", "font-size:100%; color: " + txt_cmd_color +  ";background-color:" + bg_txt_cmd + ";");
+td_b.append(title_time_shoot_ms);
+
+
+
+
+
+AddBlankRow(table, 5 );
+/***************************************/
+
+
+var tr = document.createElement("tr");
+table.append(tr);
+
+var td_title = document.createElement("td");
+td_title.setAttribute("colspan", "2");
+tr.append(td_title);
+
+var td_a = document.createElement("td");
+td_a.setAttribute("colspan", "3");
+tr.append(td_a);
+
+
+
+var title_time_shoot_ms = document.createElement("a");
+title_time_shoot_ms.className = "title_time-shoot-milliseconds";
+title_time_shoot_ms.text="\u00a0 เวลายิง (มิลลิวินาที): \u00a0";
+title_time_shoot_ms.setAttribute("style", "font-size:100%; color: " + font_text_topic +  ";background-color:" + bg_text_topic + ";");
+td_title.append(title_time_shoot_ms);
+
+
+var time_shoot_ms = document.createElement("a");
+time_shoot_ms.className = class_cmd_value;
+time_shoot_ms.text="\u00a0 START C \u00a0";
+time_shoot_ms.setAttribute("style", "font-size:100%; color:#DC143C; background-color:" + bg_txt_cmd + ";");
+td_a.prepend(time_shoot_ms);
+
+
+AddBlankRow(table, 5 );
+/***************************************/
+
+
+var tr = document.createElement("tr");
+table.append(tr);
+
+var td_title = document.createElement("td");
+td_title.setAttribute("colspan", "2");
+tr.append(td_title);
+
+var td_a = document.createElement("td");
+td_a.setAttribute("colspan", "3");
+tr.append(td_a);
+
+
+
+var title_time_shoot_ms = document.createElement("a");
+title_time_shoot_ms.className = "title_time-shoot-milliseconds";
+title_time_shoot_ms.text="\u00a0 ชื่อเพื่อน: \u00a0";
+title_time_shoot_ms.setAttribute("style", "font-size:100%; color: " + font_text_topic +  ";background-color:" + bg_text_topic + ";");
+td_title.append(title_time_shoot_ms);
+
+
+var time_shoot_ms = document.createElement("a");
+time_shoot_ms.className = class_cmd_friend_username;
+time_shoot_ms.text = "";
+time_shoot_ms.setAttribute("style", "font-size:100%; color:#DC143C; background-color:" + bg_txt_cmd + ";");
+td_a.prepend(time_shoot_ms);
+
+
+/**
+
+var title_program_edit = document.createElement("a");
+title_program_edit.className = "title_program_edit";
+title_program_edit.setAttribute("style", "font-size:" + font_size + "px;left:100;right:100px;color:#DC143C;background-color:#ffffff;");
+panel_element_control.prepend(title_program_edit);
+**/
+
+
+}
+
+function PanelCommandEdit(){
+
+
+
+
+/*****************************************************/
+
+var table = document.createElement("table");
+table.width = "100%";
+table.className = "table-content-program-control-edit text-center";
+table.setAttribute("style", "font-size:10px color:#DC143C; text-align: left;");
+
+var element = getElementChildContent(frame_in_content_cmd_edit);
+element.append(table);
+
+
+var tr = document.createElement("tr");
+table.append(tr);
+
+var th = document.createElement("th");
+th.setAttribute("colspan", "5");
+tr.append(th);
+
+
+var title_program_edit_center = document.createElement("center");
+title_program_edit_center.className = "title_program_edit_center";;
+title_program_edit_center.textContent="[ แก้ไขคำสั่งการทำงานโปรแกรม ]";
+title_program_edit_center.setAttribute("style", "font-size:100%; color:#DC143C; background-color:#ffffff;");
+th.append(title_program_edit_center);
+
+
+/**************************************/
+AddBlankRow(table, 5);
+
+/**************************************/  
+
+
+var tr_select_room = document.createElement("tr");
+tr_select_room.className = "tr-select-room";
+table.append(tr_select_room);
+
+var th_title = document.createElement("th");
+tr_select_room.append(th_title);
+
+var th_88_normal = document.createElement("th");
+th_88_normal.setAttribute("colspan", "2");
+tr_select_room.append(th_88_normal);
+
+var th_88_vip = document.createElement("th");
+th_88_vip.setAttribute("colspan", "2");
+tr_select_room.append(th_88_vip);
+
+var title_room = document.createElement("a");
+title_room.className = "title_time-shoot-milliseconds";
+title_room.text="\u00a0 เลือกห้องเล่น: \u00a0";
+title_room.setAttribute("style", "font-size:100%; color:" + font_text_topic + ";background-color:" + bg_text_topic + ";");
+th_title.append(title_room);
+
+var str_room = room_normal_88.getName() + " [" + room_normal_88.getIndex() + "]";
+
+var title_room_a = document.createElement("a");
+title_room_a.className = "cmd_edit_room_index";
+title_room_a.text = str_room;
+title_room_a.onclick = UpdateCMDRoomToNormal88;
+title_room_a.setAttribute("style", "font-size:100%; color:#f1c232;background-color:#990000;");
+th_88_normal.append(title_room_a);
+
+var str_room = room_vip_88.getName() + " [" + room_vip_88.getIndex() + "]";
+
+var title_room_b = document.createElement("a");
+title_room_b.className = "cmd_edit_room_index";
+title_room_b.text= str_room;
+title_room_b.onclick = UpdateCMDRoomToVip88;
+title_room_b.setAttribute("style", "font-size:100%; color:#f1c232;background-color:#990000;");
+th_88_vip.append(title_room_b);
+
+
+
+/**************************************/
+
+
+var tr_select_room = document.createElement("tr");
+tr_select_room.className = "tr-select-room";
+table.append(tr_select_room);
+
+var th_title = document.createElement("th");
+tr_select_room.append(th_title);
+
+var th_264_normal = document.createElement("th");
+th_264_normal.setAttribute("colspan", "2");
+tr_select_room.append(th_264_normal);
+
+var th_264_vip = document.createElement("th");
+th_264_vip.setAttribute("colspan", "2");
+tr_select_room.append(th_264_vip);
+
+/**************************************/  
+
+
+var str_room = room_normal_264.getName() + " [" + room_normal_264.getIndex() + "]";
+
+var title_room_c = document.createElement("a");
+title_room_c.className = "cmd_edit_room_index";
+title_room_c.text = str_room;
+title_room_c.onclick = UpdateCMDRoomToNormal264;
+title_room_c.setAttribute("style", "font-size:100%; color:#f1c232;background-color:#990000;");
+th_264_normal.append(title_room_c);
+
+var str_room = room_vip_264.getName() + " [" + room_vip_264.getIndex() + "]";
+
+var title_room_d = document.createElement("a");
+title_room_d.className = "cmd_edit_room_index";
+title_room_d.text= str_room;
+title_room_d.onclick = UpdateCMDRoomToVip264;
+title_room_d.setAttribute("style", "font-size:100%; color:#f1c232;background-color:#990000;");
+th_264_vip.append(title_room_d);
+
+
+/**************************************/
+
+AddBlankRow(table, 5);
+
+/**************************************/  
+
+var tr_change_time_shoot = document.createElement("tr");
+tr_change_time_shoot.className = "tr_change_time_shoot";
+table.append(tr_change_time_shoot);
+
+var th_title = document.createElement("th");
+tr_change_time_shoot.append(th_title);
+
+var th_a = document.createElement("th");
+th_a.setAttribute("colspan", 2);
+tr_change_time_shoot.append(th_a);
+
+var th_c = document.createElement("th");
+th_c.setAttribute("colspan", 2);
+tr_change_time_shoot.append(th_c);
+
+var title_time_shoot_ms = document.createElement("a");
+title_time_shoot_ms.className = "title_time-shoot-milliseconds";
+title_time_shoot_ms.text="\u00a0 เวลายิง (มิลลิวินาที): \u00a0";
+title_time_shoot_ms.setAttribute("style", "font-size:100%; color:" + font_text_topic + ";background-color:" + bg_text_topic + ";");
+th_title.append(title_time_shoot_ms);
+
+var input=document.createElement("input");
+input.id=class_cmd_edit_ms;
+input.type="text";
+input.value="900";
+input.setAttribute("style", "font-size:100%; color:#DC143C; background-color:#ffffff;");
+input.setAttribute("size","10%");
+th_a.append(input);
+
+var buton_update_ms = document.createElement("button");
+buton_update_ms.id="button-update-milliseconds";
+buton_update_ms.type="button";
+buton_update_ms.textContent= "\u00a0" + "บันทึก" + "\u00a0";
+buton_update_ms.onclick = UpdateCMDMilliseconds;
+buton_update_ms.setAttribute("style", "font-size:100%; color:#f1c232; background-color:#351c75;");
+th_c.append(buton_update_ms);
+
+/**************************************/
+
+AddBlankRow(table, 5);
+
+/**************************************/  
+
+var tr_change_time_shoot = document.createElement("tr");
+tr_change_time_shoot.className = "tr_change_time_shoot";
+table.append(tr_change_time_shoot);
+
+var th_title = document.createElement("th");
+tr_change_time_shoot.append(th_title);
+
+var th_a = document.createElement("th");
+th_a.setAttribute("colspan", 2);
+tr_change_time_shoot.append(th_a);
+
+var th_c = document.createElement("th");
+th_c.setAttribute("colspan", 2);
+tr_change_time_shoot.append(th_c);
+
+var title_time_shoot_ms = document.createElement("a");
+title_time_shoot_ms.className = "title_time-shoot-milliseconds";
+title_time_shoot_ms.text="\u00a0 ชื่อเพื่อน: \u00a0";
+title_time_shoot_ms.setAttribute("style", "font-size:100%; color:" + font_text_topic + ";background-color:" + bg_text_topic + ";");
+th_title.append(title_time_shoot_ms);
+
+var input=document.createElement("input");
+input.id= class_cmd_edit_friend_username;
+input.type="text";
+input.value="";
+input.setAttribute("size","10%");
+input.setAttribute("style", "font-size:100%; color:#DC143C;background-color:#ffffff;");
+th_a.append(input);
+
+var buton_update_ms = document.createElement("button");
+buton_update_ms.id="button-update-milliseconds";
+buton_update_ms.type="button";
+buton_update_ms.textContent= "\u00a0" + "บันทึก" + "\u00a0";
+buton_update_ms.onclick = UpdateCMDFriend;
+buton_update_ms.setAttribute("style", "font-size:100%; color:#f1c232; background-color:#351c75;");
+th_c.append(buton_update_ms);
+
+}
+
+function AddBlankRow(table_element , th_count){
+
+var count = th_count;
+
+/**************************************/
+
+// Free row
+var tr = document.createElement("tr");
+table_element.append(tr);
+
+
+for(var index = 0; index < th_count; index ++){
+  
+  var th = document.createElement("th");
+  tr.append(th);
+
+  //free trxt 
+  var a_text = document.createElement("a");
+  a_text.text = "\u00a0";
+  a_text.setAttribute("style", "font-size:100%;");
+  th.append(a_text);
+  
+  }//End loop
+
+
+}
+
+/******************************************************/
+//MAIN HTML PROGRAM CONTROLLER 
+/******************************************************/
+PanelCommand();
+/******************************************************/
+PanelCommandEdit();
+/******************************************************/
+PanelProgramSave();
+/******************************************************/
+PanelProgramRespones();
+/******************************************************/
+
+/******************************************************/
+
+/******************************************************/
+// END HTML PROGRAM CONTROLLER 
+/******************************************************/
+
+UpdateCMDRoomToNormal264();
+UpdateCMDMilliseconds(900);
+UpdateControlRunStatus("START A");
+UpdateControlRoundTitle("START B");
+UpdateControlTransactionTitle("START C");
+UpdateControlTransactionDateTimeExp("START D");
+UpdateControlRoundDateTimeExp("START E");
+UpdateControlTimeShoot("START F");
+UpdateControlCredit("START G");
+UpdateControlRoundRanking("START H");
+
+/******************************************************/
+//END HTML PROGRAM CONTROLLER 
+/******************************************************/
+
+
+
+ 
+
+
+
+/******************************************************/
+// START PROGRAM
+/******************************************************/
+
+function CensorUsername(str){
+  var new_str = "";
+  new_str += str[0] + str[1];
+  new_str += "xxxx";
+  new_str += str[str.length - 2] + str[str.length - 1];
+  
+  return new_str;
+}
+
+var global_server_my_username = "";
+var global_server_my_username_censor = "";
+var ber_server_credit_current = "0";
+
+
+var final_date_time_transaction_exp = new Date();
+var final_date_time_round_exp = new Date();
+var final_date_time_shoot = new Date();
+
+var group_room_increase_time_seconds = 60;
+var server_time_shoot_milliseconds = 0;
+
+var normal = "relative flex flex-col h-[136px] lg:h-[200px] border-gradient";
+var vip = "relative flex flex-col h-[136px] lg:h-[200px] border-gradient-yellow";
+
+var dna_normal_88 = "0";
+var dna_vip_88 = "0";
+var dna_normal_264 = "1";
+var dna_vip_264 = "1";
+
+/******************************************************/
+// START FINDING PAGE
+/******************************************************/
+
+var server_find_page_ranking = "5";
+
+//time seconds increase frome round time exp end 
+var server_waiting_find_ranking_time_seconds = "60";
+
+var final_date_time_wating_find_row_rank = new Date();
+
+//callback
+var bet_my_ranking_no = "0";
+var bet_my_ranking_date_time = "";
+var bet_my_ranking_username = "";
+
+var time_waiting_load_page_ranking_process_seconds = 5000;
+var time_waiting_load_page_ranking_seconds = 5000;
+
+
+
+function delay(time) {
+  console.debug("หน่วงเวลา . . . " + (time--));
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
+function CloseDialogMenuSetting() {
+
+  var profile_dialog_show_length = document.getElementsByClassName("ant-btn ant-btn-default sc-a986267-0 iXwGiG aspect-square relative flex items-center justify-center lg:min-h-[48px] lg:min-w-[48px]").length;
+
+  var this_page_show_profiles_dialog = (profile_dialog_show_length > 0);
+
+  if (this_page_show_profiles_dialog) {
+    document.getElementsByClassName("ant-btn ant-btn-default sc-a986267-0 iXwGiG aspect-square relative flex items-center justify-center lg:min-h-[48px] lg:min-w-[48px]")[0].click();
+
+    console.debug("ปิดหน้าโปรไฟล์");
+
+  } else {
+
+    console.debug("ไม่พบกล่องหน้าโปรไฟล์");
+  }
+
+} //End function close profile dialog
+
+function ClickMenuSetting(){
+    
+  var class_group_element = "sticky top-0 z-50";
+  var class_element = "h-[20px] w-[20px] xxs:h-[25px] xxs:w-[25px] lg:h-[32px] lg:w-[32px] cursor-pointer";
+  
+  var class_group_element_length = document.getElementsByClassName(class_group_element).length;
+
+  if(class_group_element_length > 0){
+      //Have group element 
+      var element_length = document.getElementsByClassName(class_group_element)[0].getElementsByClassName(class_element).length;
+      
+      if(element_length >= 2){
+          document.getElementsByClassName(class_group_element)[0].getElementsByClassName(class_element)[1].click();
+      }else{
+          console.error("Click menu setting error 2");
+      }
+  
+  }else{
+      console.error("Click menu setting error 1");
+  }//End check group element 
+  
+}
+
+function MenuSettingGetUsername(){
+
+  var bet_my_username;
+
+  var class_element = "mb-0 font-bold text-white text-[24px] text-shadow";
+
+  var element_length = document.getElementsByClassName(class_element).length;
+
+  if(element_length > 0){
+      bet_my_username = document.getElementsByClassName(class_element)[0].innerText;
+  }else{
+      console.error("menu setting get username error 1");
+  }
+
+  return bet_my_username;
+
+}
+
+
+async function SelectBetType(){
+
+  var tpye_lotery = 0;
+
+  var select_type = tpye_lotery;
+
+  var element_length = document.getElementsByClassName("relative cursor-pointer w-full").length;
+
+  if(element_length > select_type){
+      document.getElementsByClassName("relative cursor-pointer w-full")[select_type].click();
+  }else{
+      console.error("Selete type bet error 1");
+  }
+
+  
+}
+
+
+async function ThisPageGetCredit(){
+
+  var credit;
+  var class_element = "mb-0 text-white text-[12px] xxs:text-[14px] lg:text-[20px]";
+
+  var element_length = document.getElementsByClassName(class_element).length;
+  
+  if(element_length > 0){
+      credit = document.getElementsByClassName(class_element)[0].innerText;
+  }else{
+      console.error("this page get credit error 1");
+  }
+
+  return credit;
+  
+}
+
+function StrToNumberOnly(str){
+    var res = str.replace(/\D/g, "");
+    return res;
+}
+
+function DateToStrHuman(date_time){
+
+    var date_time_now = new Date(date_time);
+
+    var str_date_time = "";
+    
+    str_date_time += StrZero(date_time_now.getDate());
+    str_date_time += "/" + StrZero(date_time_now.getMonth());
+    str_date_time += "/" + date_time_now.getFullYear();
+    /*********************/
+    str_date_time += " " + StrZero(date_time_now.getHours());
+    str_date_time += ":" + StrZero(date_time_now.getMinutes());
+    str_date_time += ":" + StrZero(date_time_now.getSeconds());
+    /*********************/
+    str_date_time += " (" + date_time_now.getMilliseconds() + ")";
+
+    return str_date_time;
+
+}
+
+
+function StrZero(str){
+
+    var new_str = "";
+    var number = parseInt(str);
+
+    if(number < 10){
+        new_str += "0" + number;
+    }else{
+        new_str += number;
+    }
+
+    return new_str;   
+}
+
+/** 
+function WebServerTextControl(str){
+    document.getElementById("text-program-control").innerText = str;
+}
+**/
+
+
+
+var class_card_round = "border-gradient !rounded-[10px] before:!rounded-[10px]";
+var class_time_countdown = "timer-block flex items-center justify-between";
+var class_time_round_exp = "close-time-block border-gradient";
+
+async function SelectRoundPlay(){
+
+  scroll(0,100000);
+ 
+  var card_round_length = document.getElementsByClassName(class_card_round).length;
+  var isCanPlay = false;
+  
+  console.log("ขนาดการ์ดรอบทั้งหมด: " + card_round_length);
+
+  for(var index = 0; index < card_round_length; index ++){
+		console.debug("ตรวจสอบกล่องรอบการเล่นที่: " + index);
+    isCanPlay = await Check(index);
+
+    if(isCanPlay){
+      break;
+    }
+   
+  }//End loop total round card 
+
+  
+  return isCanPlay;
+
+
+}//End function 
+
+async function Check(index){
+  
+  	var isCanPlay = false;
+    
+    
+
+    var round_time_exp_length = document.getElementsByClassName(class_card_round)[index].getElementsByClassName(class_time_round_exp).length;
+    var round_time_countdown_length = document.getElementsByClassName(class_card_round)[index].getElementsByClassName(class_time_countdown).length;
+    
+    console.debug("ขนาดจำนวนของกล่องหมดเวลานับถอยหลัง: " + round_time_exp_length);
+    console.debug("ขนาดจำนวนของกล่องเวลานับถอยหลัง: " + round_time_countdown_length);
+		
+
+		var is_round_have_time = (round_time_exp_length > 0) && (round_time_countdown_length > 0);
+    
+    if(is_round_have_time){
+      
+      ConsoleGreen("กล่องรอบการเล่นที่: " + index + " สมบูรณ์");
+      
+      var round_time_exp = document.getElementsByClassName(class_card_round)[index].getElementsByClassName(class_time_round_exp)[0].innerText;
+
+      round_time_exp = StrToNumberOnly(round_time_exp);
+      
+      var hh = round_time_exp[0] + round_time_exp[1];
+      var mn = round_time_exp[2] + round_time_exp[3];
+
+      hh = parseInt(hh);
+      mn = parseInt(mn);
+      
+      var date_time_now = new Date();
+      var date_time_transaction_exp_value = new Date();
+      var date_time_round_exp_value = new Date();
+      var date_time_round_shoot_value = new Date();
+      
+      //date time transaction exp
+      date_time_transaction_exp_value.setHours(hh);
+      date_time_transaction_exp_value.setMinutes(mn);
+      date_time_transaction_exp_value.setSeconds(0);
+      date_time_transaction_exp_value.setMilliseconds(0);
+
+      var isRoundNextDay = (date_time_now > date_time_transaction_exp_value);
+      
+      if(isRoundNextDay){
+        date_time_transaction_exp_value.setDate(date_time_transaction_exp_value.getDate() + 1); 
+      }
+      
+      
+      var time = document.getElementsByClassName(class_card_round)[index].getElementsByClassName("label")[0].innerText;
+
+      var hh_exp = time[0] + time[1];
+      hh_exp = parseInt(hh_exp);
+
+      var mn_exp = time[3] + time[4];
+      mn_exp = parseInt(mn_exp);
+
+      var sec = time[6] + time[7];
+      sec = parseInt(sec);
+
+
+      if(hh_exp > 0){
+        isCanPlay = true;
+      }
+
+      if(mn_exp >= 2){
+        isCanPlay = true;
+      }
+      
+      if(isCanPlay){
+
+        //date time round exp
+        date_time_round_exp_value = new Date(date_time_transaction_exp_value);
+        date_time_round_exp_value.setHours(hh);
+        date_time_round_exp_value.setMinutes(mn);
+        date_time_round_exp_value.setSeconds(group_room_increase_time_seconds);
+        date_time_round_exp_value.setMilliseconds(0);
+
+        date_time_round_shoot_value = new Date(date_time_round_exp_value);
+        date_time_round_shoot_value.setSeconds(date_time_round_shoot_value.getSeconds() - 1);
+        date_time_round_shoot_value.setMilliseconds(server_time_shoot_milliseconds);
+
+        final_date_time_transaction_exp_value = new Date(date_time_transaction_exp_value);
+        final_date_time_round_exp = new Date(date_time_round_exp_value);
+        final_date_time_shoot = new Date(date_time_round_shoot_value);
+
+        UpdateControlRoundDateTimeExp( DateToStrHuman(final_date_time_round_exp) );
+        UpdateControlTransactionDateTimeExp( DateToStrHuman(final_date_time_transaction_exp_value) );
+        UpdateControlTimeShoot( DateToStrHuman(final_date_time_shoot) );
+        
+
+        ConsoleInformation("หมดเวลาดึงโพย: " + DateToStrHuman(date_time_transaction_exp_value));
+        ConsoleInformation("หมดเวลารอบ: " + DateToStrHuman(date_time_round_exp_value));
+        ConsoleInformation("เวลายิง: " + DateToStrHuman(date_time_round_shoot_value));
+        //Click card round 
+        document.getElementsByClassName(class_card_round)[index].getElementsByClassName("label")[0].click();
+  
+        
+      }else{
+
+        console.log("%cไม่เลือกกล่องรอบการเล่นที่: " + index , 'color: red');
+        
+        
+    	}//End check is have round time exp//End check is can play round 
+
+    console.log(" ");
+  
+  
+		}//End check round have time
+  
+  return isCanPlay;
+  
+}//End check function 
+
+function CloseDialogNews(){
+  
+  var alert_dialog_class = "mb-0 font-bold text-[16px]";
+  
+  var alert_dialog_length = document.getElementsByClassName(alert_dialog_class).length;
+  
+  var isHaveAlertDialog = (alert_dialog_length > 0);
+  
+  if(isHaveAlertDialog){
+    console.log("ปิดกล่องแจ้งเตือน");
+    document.getElementsByClassName(alert_dialog_class)[0].click();
+  }else{
+    console.log("ไม่พบ กล่องแจ้งเตือน");
+  }
+  
+  
+  
+}
+
+
+async function Shoot(date_time_shoot){
+    setTimeout(function(){
+        document.getElementsByClassName("button-component border-gradient")[12].click();
+    }, (date_time_shoot - new Date()));
+}
+
+
+function ClickTabShootNumber(){
+
+  var class_name = "ant-btn ant-btn-default sc-a986267-0 burYXO !h-[33px] lg:!h-[44px] w-full";
+
+    var element_length = document.getElementsByClassName(class_name).length;
+
+    if(element_length > 0){
+      document.getElementsByClassName(class_name)[0].click();
+    }else{
+      console.error("ไม่พบแท็บยิงเลข");
+    }
+    
+
+}
+
+function ClickRandomNumber(){
+
+    var class_name = "sc-ffa2f4bb-0 foGXRd button-component border-gradient";
+
+    var element_length = document.getElementsByClassName(class_name).length;
+
+    if(element_length > 0){
+      document.getElementsByClassName(class_name)[0].click();
+    }else{
+      console.error("ไม่พบปุ่มสุ่มเลข");
+    }
+
+}
+
+
+function ConsoleGreen(str){
+    console.debug("%c" + str , 'color: green');
+}
+
+
+function ConsoleStartProcess(str){
+    console.log('%c' + str, 'background: #222; color: #bada55');
+}
+
+function ConsoleInformation(str){
+    console.log('%c' + str, 'background: #222; color: #1E90FF');
+}
+
+function countDownConsole(i) {
+    return promise = new Promise( (resolve, reject) => {
+        
+        var time = (i--);
+        time = parseInt(time);
+        var str_log = "นับถอยหลังเวลายิง: " + time + " วินาที";
+        UpdateTextRealTime(str_log);
+      console.log(str_log);
+
+      //WebServerTextControl(str_log);
+  
+      if (i > 0) {
+        setTimeout( () => {
+          countDownConsole(i).then(resolve);
+        }, 1000);
+      } else {
+        resolve('counter finished:');
+      }
+  
+    });
+  
+  }
+  
+
+async function Run(){
+
+  //await delay(3000);
+  /*********************/
+  //await CloseDialogNews();
+  //console.log(" ");
+  //await delay(3000);
+  ///*********************/
+  //ConsoleStartProcess("เปิดหน้าโปรไฟล์ . . .");
+  //await ClickMainPage();    
+  //ConsoleGreen("เปิดหน้าโปรไฟล์ . . . เสร็จสิ้น");
+  //console.log(" ");
+  //await delay(3000);
+  ///*********************/
+  //await CloseDialogMenuSetting();
+  //console.log(" ");
+  //await delay(3000);
+  /*********************/
+  ClickMenuSetting();
+  console.log(" ");
+  await delay(3000);
+  /*********************/
+  //bet website username
+  global_server_my_username = await MenuSettingGetUsername();
+  ConsoleInformation("ชื่อผู้ใช้งานปัจจุบันจากเว็บ: " + global_server_my_username);
+  console.log(" ");
+  await delay(3000);
+  /*********************/
+  //var isUsernameMatching = (bet_my_username == global_server_my_username);
+  await delay(3000);
+  /*********************/
+  CloseDialogMenuSetting();
+  console.log(" ");
+  await delay(3000);
+  /*********************/
+  //var my_credit = ThisPageGetCredit();
+  //ConsoleInformation("เครดิตปัจจุบันจากเว็บ: " + my_credit);
+  //UpdateControlCredit(my_credit);
+  //ber_server_credit_current = my_credit;
+  //console.log(" ");
+  //await delay(3000);
+  /*********************/
+  //Click box menu bet play
+  //ConsoleStartProcess("เลือกรูปแบบการเล่น . . .");
+  //SelectBetType();
+  //ConsoleGreen("เลือกรูปแบบการเล่น . . . เสร็จสิ้น");
+  //console.log(" ");
+  //await delay(3000);
+  /*********************/
+
+  //ConsoleStartProcess("เลือกกลุ่มห้องเล่น . . .");
+  //document.getElementsByClassName(normal)[dna_normal_264].click();
+  //ConsoleGreen("เลือกกลุ่มห้องเล่น . . . เสร็จสิ้น");
+  //console.log(" ");
+  //console.debug("Room index: " + index_room);
+  //await delay(3000);
+  /*********************/
+
+  //ConsoleStartProcess("เลือกรอบเล่น . . .");
+  //await SelectRoundPlay();
+  //ConsoleGreen("เลือกรอบเล่นเ . . . เสร็จสิ้น");
+  //console.log(" ");
+  //await delay(3000);
+  /*********************/
+  ClickTabShootNumber();
+  await delay(3000);
+  /*********************/
+
+  ClickRandomNumber();
+  await delay(3000);
+
+    ConsoleStartProcess("รอเวลายิง . . .");
+    global_rank = new Rank();
+
+    var cmd_shoot_ms = GetCmdMilliseconds();
+    var date_time_round_exp = GetRoomDateTimeWithMyPc();
+    date_time_round_exp.setMilliseconds(cmd_shoot_ms);
+    final_date_time_shoot = new Date(date_time_round_exp);
+    //for waiting save ranking (can delete for full version)
+    final_date_time_round_exp = new Date(date_time_round_exp);
+    final_date_time_round_exp.setMinutes(final_date_time_round_exp.getMinutes() + 1);
+
+    console.log("เวลายิงจริง: " + DateToStrHuman(final_date_time_shoot));
+    console.log("เวลาสิ้นสุดเก็บอันดับ: " + DateToStrHuman(final_date_time_round_exp));
+
+    var time_distance_to_shoot_ms = (final_date_time_shoot - new Date());
+    //var time_delay_end_shoot_ms = 5000;
+    //var time_delay_after_shoot_ms = (time_distance_to_shoot_ms + time_delay_end_shoot_ms);
+    var time_delay_after_shoot_sec = (time_distance_to_shoot_ms / 1000);
+
+    let coundownConsole = countDownConsole(time_delay_after_shoot_sec);
+    coundownConsole.then( (msg) => {
+        console.log(msg);
+        UpdateTextRealTime(msg);
+    });
+
+    await Shoot(final_date_time_shoot);
+
+    await delay(final_date_time_shoot - new Date());
+
+    ConsoleGreen("การยิง . . . เสร็จสิ้น");
+    UpdateTextRealTime("การยิง . . . เสร็จสิ้น");
+    await delay(5000);
+
+    /*********************/
+      await FindingRanking(server_find_page_ranking, global_server_my_username);
+
+      var my_ranking_log = "อันดับ: " + global_rank.getNo();
+      my_ranking_log += " | ชื่อที่แสดง  " + global_rank.getName();
+      my_ranking_log += " | เวลายิงที่แสดง " + global_rank.getDateTime();
+
+      alert(my_ranking_log);
+
+
+}
+
+
+
+async function main() {
+
+    while(true){
+
+      console.log("ส่วนทำงานหลักรออ่านคำสั่ง");
+      UpdateTextRealTime("ส่วนทำงานหลักรออ่านคำสั่ง");
+
+      await delay(1000);
+
+      if(play){
+
+        console.log("สถานะการเล่นโปรแกรม: " + play);
+        UpdateTextRealTime("สถานะการเล่นโปรแกรม: " + play);
+
+        ConsoleStartProcess("START LOOP");
+        UpdateTextRealTime("เริ่มต้นการเล่น");
+
+        await Run();
+        ConsoleGreen("END LOOP");
+        UpdateTextRealTime("สิ้นสุดการเล่น");
+
+        await SetPlay(false);
+
+      }
+
+    }//End loop 
+
+} //End main function 
+
+main();
+
+/******************************************************/
+// END PROGRAM
+/******************************************************/
+
+
+/******************************************************/
+// START FINDING PAGE
+/******************************************************/
+
+
+async function delay(time) {
+
+  console.debug("หน่วงเวลา . . . " + (time--));
+
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
+async function getRowRankingThisPage(my_username){
+  
+  var isFindMatchMyUsername = false;
+  var row_length = document.getElementsByClassName("justify-start gap-2 items-center").length;
+  
+  if(row_length <= 0){
+    //is finish find page total
+    isFindMatchMyUsername = true;
+  }
+  
+  for(var index = 0; index < row_length; index++){
+    //Loop total row 
+
+      var row_collection = document.getElementsByClassName("justify-start gap-2 items-center")[index];
+
+      var row_rank_number = row_collection.getElementsByClassName("ant-typography font-18 whitespace-nowrap")[0].innerText;
+      var row_rank_username = row_collection.getElementsByClassName("ant-typography font-16")[0].innerText;
+      var row_rank_date_time = document.getElementsByClassName("flex justify-end p-0 xxs:p-2")[index].innerText;
+    
+    	
+    	var row_rank_username_lowcase = row_rank_username.toLowerCase();
+      var my_username_censor = CensorUsername(my_username);
+    	var my_username_censor_lowcase = my_username_censor.toLowerCase();
+    
+    	var isRowMyRanking = (row_rank_username_lowcase == my_username_censor_lowcase);
+    
+    	if(isRowMyRanking){
+        isFindMatchMyUsername = true;
+        
+        bet_my_ranking_no = row_rank_number;
+        bet_my_ranking_username = row_rank_username;
+        bet_my_ranking_date_time = row_rank_date_time;
+
+        var ranking = new Rank();
+        ranking.setNo(row_rank_number);
+        ranking.setName(row_rank_username);
+        ranking.setDateTime(row_rank_date_time);
+        global_rank = ranking;
+        
+        var log = "เจออันดับ: " + row_rank_number + " | " + row_rank_username + " (" + my_username_censor_lowcase + ")" + " | " + row_rank_date_time;
+        console.log(log);
+        UpdateTextRealTime(log);
+        break;
+
+      }else{
+
+        var log = "ไม่พบอันดับ: " + row_rank_number + " | " + row_rank_username + " (" + my_username_censor_lowcase + ")" + " | " + row_rank_date_time;
+        UpdateTextRealTime(log);
+        console.log(log);
+
+      }//End check is row current my username
+
+
+    }//End loop total row
+  
+  return isFindMatchMyUsername;
+  
+}//End function 
+
+async function getRowRankingTotal(par_find_page, par_my_username){
+  
+  var find_page = par_find_page;
+  var find_my_username = par_my_username;
+  
+  //Click first page
+  console.log("คลิกเพจ 1 เริ่มต้น");
+  UpdateTextRealTime("คลิกเพจ 1 เริ่มต้น")
+  document.getElementsByClassName("ant-pagination-item ant-pagination-item-1")[0].click();
+  
+  await delay(time_waiting_load_page_ranking_seconds);
+  
+  for(var page = 0; page < 5; page++){
+  
+    console.log( "เริ่มต้นค้นหาเพจรอบที่: " + (page+1) );
+    UpdateTextRealTime("เริ่มต้นค้นหาเพจรอบที่: " + (page+1));
+    var isFindMatchMyUsername = await getRowRankingThisPage(find_my_username);
+
+    //Next page row ranking
+    console.log("ค้นหาอันดับ คลิกหน้าถัดไป: " + (page+1));
+    UpdateTextRealTime("ค้นหาอันดับ คลิกหน้าถัดไป: " + (page+1))
+    document.getElementsByClassName("ant-pagination-next")[0].click();
+    console.log(" ");
+    
+    if(isFindMatchMyUsername){
+      break;
+    }
+    
+    await delay(time_waiting_load_page_ranking_seconds);
+
+  }//End loop total page 
+  
+}//End function row ranking total 
+
+async function FindingMyRanking(par_server_find_page_ranking, par_server_my_usernmae){
+
+  await getRowRankingTotal(par_server_find_page_ranking, par_server_my_usernmae);
+}
+
+async function WaitingLoadPageRanking(){
+  
+  console.log("รอโหลดหน้าอันดับ . . .");
+  
+  var isHaveListRowRanking = false;
+
+  var date_time_wait_max = new Date(final_date_time_round_exp);
+  date_time_wait_max.setSeconds(date_time_wait_max.getSeconds() + server_waiting_find_ranking_time_seconds);
+  
+  final_date_time_wating_find_row_rank = new Date();
+
+
+  console.log("เวลาสิ้นสุดการรอเก็บอันดับ: " + DateToStrHuman(date_time_wait_max) );
+  
+  while(true){
+    
+    var isWaiting = (new Date() < date_time_wait_max);
+
+    await delay(time_waiting_load_page_ranking_process_seconds);
+
+    if(isWaiting){
+
+      var list_row_ranking = document.getElementsByClassName("items-block").length;
+      isHaveListRowRanking = (list_row_ranking > 0);
+      
+      if(isHaveListRowRanking){
+        console.log("รอโหลดหน้าอันดับ ค้นพบการแสดงอันดับ");
+        break;
+      }else{
+        console.log("รอโหลดหน้าอันดับ ไม่ค้นพบการแสดงอันดับ: " + "(" + list_row_ranking + ")");
+      }
+
+    }else{
+      
+			console.log("รอโหลดหน้าอันดับ เวลารอสิ้นสุด");
+      break;
+
+    }//End check is can waitng load page 
+
+  }//End loop 
+
+  console.log("รอโหลดหน้าอันดับ . . . เสร็จสิ้น");
+  
+  return isHaveListRowRanking;
+  
+}//End function 
+
+async function FindingRanking(par_server_find_page_ranking, par_server_my_username){
+  
+  var isHaveTableRanking = await WaitingLoadPageRanking();
+  
+  console.log(" ");
+
+  if(isHaveTableRanking){
+    console.log("ค้นหาอันดับรางวัล . . .");
+    UpdateTextRealTime("ค้นหาอันดับรางวัล . . .");
+  	await FindingMyRanking(par_server_find_page_ranking, par_server_my_username);
+    console.log("ค้นหาอันดับรางวัล . . . เสร็จสิ้น");
+    UpdateTextRealTime("ค้นหาอันดับรางวัล . . . เสร็จสิ้น");
+  }else{
+    console.log("การค้นหาอันดับรางวัล . . . ไม่สำเร็จ");
+    UpdateTextRealTime("การค้นหาอันดับรางวัล . . . ไม่สำเร็จ");
+  }
+  
+  
+}
+
+
+
+
+
+
+/******************************************************/
+// END FINDING PAGE
+/******************************************************/
